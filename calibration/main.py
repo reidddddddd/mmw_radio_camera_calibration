@@ -61,41 +61,62 @@ for idx, e in enumerate(extrinsics_opt):
 
 wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(np.array([0, -0.077, 0]))
 
-
-tmp1 = np.dot(np.dot(np.array([[-0.2, 0.04, 0.41, 1]]), wwm_extrinsics_matrix.T), intrinsic_matrix.T)
-image = cv2.imread("./testData/image.jpg")
-point_size = 1
-point_color = (0, 0, 255)  # BGR
-thickness = 4  # 0 、4、8
-
-cv2.circle(image, (383, 364), point_size, point_color, thickness)
-cv2.imwrite('./testData/1.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+# aaa = util.to_homogeneous_3d_multiple_points(obj_points[0])
+# extr_answer = np.dot(util.to_homogeneous_3d_multiple_points(obj_points[0]), extrinsics_opt[0].T)
+# inter_answer = np.dot(extr_answer, intrinsic_matrix.T)
+#
+#
+# inter_answer = np.divide(inter_answer, inter_answer[:, 2].reshape(inter_answer.shape[0], 1))
+#
+#
+# width = 0.3875
+# height = 0.28
+# x = -(width/2)
+# y = -0.13
+# z = 0.4
+#
+# a = util.create_sample_plane(width, height, x, y, z)
+#
+# model = np.column_stack((a, np.ones(a.shape[0])))
+#
+# tmpp = np.dot(model, wwm_extrinsics_matrix.T)
+# tmp1 = np.dot(np.dot(model, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
+# tmp1 = np.divide(tmp1, tmp1[:, 2].reshape(tmp1.shape[0], 1))
+# image = cv2.imread("./testData/image2.jpg")
+# point_size = 1
+# point_color = (0, 0, 255)  # BGR
+# thickness = 4  # 0 、4、8
+#
+# for coor in tmp1:
+#     cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
+#
+# cv2.imwrite('./testData/1.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
 
 # using plane for testing
-# frame = pd.read_csv("./testData/pcl.csv")
-# frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')
-# frame = frame[frame[' Timestamp'] <= '2022-01-05 07:26:43']
-# frame['union'] = 1
+frame = pd.read_csv("./testData/pcl2.csv")
+frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')
+frame = frame[frame[' Timestamp'] == '2022-01-06 09:47:57']
+frame['union'] = 1
 # frame = frame[frame[' ZPos'] >= 0.3]
 # frame = frame[frame[' ZPos'] <= 1.0]
 # frame = frame[frame[' Xpos'] <= 0.5]
 # frame = frame[frame[' Xpos'] >= -0.5]
 # frame = frame[frame[' YPos'] <= 0.3]
 # frame = frame[frame[' YPos'] >= -0.3]
-# frame[' ZPos'] = 6
-#
-# posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)
-# tmp1 = np.dot(posArray, wwm_extrinsics_matrix.T)
-# test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
-# # normalize z axis
-# test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))
-#
-#
-# point_size = 1
-# point_color = (0, 0, 255)  # BGR
-# thickness = 4  # 0 、4、8
-# image = cv2.imread("./testData/image.jpg")
-# for coor in test:
-#     cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
-#
-# cv2.imwrite('./testData/1.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+
+
+posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)
+tmp1 = np.dot(posArray, wwm_extrinsics_matrix.T)
+test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
+# normalize z axis
+test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))
+
+
+point_size = 1
+point_color = (0, 0, 255)  # BGR
+thickness = 4  # 0 、4、8
+image = cv2.imread("./testData/image3.jpg")
+for coor in test:
+    cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
+
+cv2.imwrite('./testData/6.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])

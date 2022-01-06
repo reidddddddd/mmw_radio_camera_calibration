@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-
+from calibration import util
 # aa = np.array([[1,2,3],[2,2,3]])
 #
 # gg = aa[:,1].reshape(2,1)
@@ -32,4 +32,11 @@ import cv2
 # for coor in inter_answer:
 #     cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
 
-image = cv2.imread("./testData/image.jpg", flags=0)
+width = 0.3875
+height = 0.28
+x = -(width/2)
+y = -0.13
+z = 0.4
+
+a = util.create_sample_plane(width,height,x,y,z)
+

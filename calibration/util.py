@@ -283,3 +283,17 @@ def rotationMatrixToEulerAngles(R):
         z = 0
 
     return np.array([x, y, z])
+
+
+def create_sample_plane(width, height, x, y, z):
+    orgin_point = [x, y, z]
+    width_points_set = []
+    for i in range(1, 10):
+        width_points_set.append([x + ((width / 10) * i), y, z])
+
+    points_set = []
+    for point in width_points_set:
+        for i in range(1, 10):
+            points_set.append([point[0], point[1] + ((height / 10) * i), point[2]])
+
+    return np.array(points_set)
