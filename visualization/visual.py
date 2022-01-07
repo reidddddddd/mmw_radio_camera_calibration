@@ -1,22 +1,17 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+from calibration import calibration
+from visualization import clean_radar_data
+
+intrinsic_matrix, wwm_extrinsics_matrix = calibration.calibration_mmw_radar_camera()
+
+model = clean_radar_data.common_read("")
+
+calibration_points = clean_radar_data.get_calibration_result(intrinsic_matrix, wwm_extrinsics_matrix, model)
 
 
-frame = pd.read_csv("./data/pcl.csv")
 
-indexs = frame[' Timestamp'].unique()[1:10]
 
-for ele in indexs:
-    tmp = frame[frame[' Timestamp'] == ele]
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.scatter(tmp[' Xpos'], tmp[' YPos'], tmp[' ZPos'])
-    ax.set_xlabel('X axis')
-    ax.set_ylabel('Y axis')
-    ax.set_zlabel('Z axis')
-    ax.set_title(ele)
 
-    plt.show()
+
+
 
 
