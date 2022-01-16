@@ -1,18 +1,15 @@
-from calibration import corner_detection as cd
-from calibration import util
-from calibration import homography_operations as ho
-from calibration import intrinsic_estimation as intr
-from calibration import extrinsic_estimation as extr
-from calibration import distortion_estimation as de
-from calibration import parameter_refinement as pr
-from calibration import util
+from Calibration import corner_detection as cd
+from Calibration import homography_operations as ho
+from Calibration import intrinsic_estimation as intr
+from Calibration import extrinsic_estimation as extr
+from Calibration import distortion_estimation as de
+from Calibration import parameter_refinement as pr
+from Calibration import util
 import numpy as np
-import pandas as pd
-import cv2
 
 
-def calibration_mmw_radar_camera():
-    obj_points, img_points, img_shapes, img_names = cd.find_corners()
+def calibration__camera(model):
+    obj_points, img_points, img_shapes, img_names = cd.find_corners(model=model)
 
     refined_homographies = []
     for index in range(len(img_points)):
@@ -60,68 +57,10 @@ def calibration_mmw_radar_camera():
         intrinsic_matrix = decomposed_p['intrinsic']
         util.info("P matrix(WebGl) for image " + str(idx + 1) + ":\n" + str(webgl_p))
 
-    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(np.array([0, -0.077, 0]))
+    return intrinsic_matrix, extrinsics_opt
 
+
+def calibration_mmw_radar_camera(model):
+    intrinsic_matrix, tmp = calibration__camera(model=model)
+    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(np.array([0, -0.1245, 0]))
     return intrinsic_matrix, wwm_extrinsics_matrix
-
-
-
-# aaa = util.to_homogeneous_3d_multiple_points(obj_points[0])
-# extr_answer = np.dot(util.to_homogeneous_3d_multiple_points(obj_points[0]), extrinsics_opt[0].T)
-# inter_answer = np.dot(extr_answer, intrinsic_matrix.T)
-#
-#
-# inter_answer = np.divide(inter_answer, inter_answer[:, 2].reshape(inter_answer.shape[0], 1))
-#
-#
-# width = 0.3875
-# height = 0.28
-# x = -(width/2)
-# y = -0.13
-# z = 0.4
-#
-# a = util.create_sample_plane(width, height, x, y, z)
-#
-# model = np.column_stack((a, np.ones(a.shape[0])))
-#
-# tmpp = np.dot(model, wwm_extrinsics_matrix.T)
-# tmp1 = np.dot(np.dot(model, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
-# tmp1 = np.divide(tmp1, tmp1[:, 2].reshape(tmp1.shape[0], 1))
-# image = cv2.imread("./testData/image2.jpg")
-# point_size = 1
-# point_color = (0, 0, 255)  # BGR
-# thickness = 4  # 0 、4、8
-#
-# for coor in tmp1:
-#     cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
-#
-# cv2.imwrite('./testData/1.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-
-# using plane for testing
-# frame = pd.read_csv("../visualization/testData/pcl2.csv")
-# frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')
-# frame = frame[frame[' Timestamp'] == '2022-01-06 09:47:57']
-# frame['union'] = 1
-# frame = frame[frame[' ZPos'] >= 0.3]
-# frame = frame[frame[' ZPos'] <= 1.0]
-# frame = frame[frame[' Xpos'] <= 0.5]
-# frame = frame[frame[' Xpos'] >= -0.5]
-# frame = frame[frame[' YPos'] <= 0.3]
-# frame = frame[frame[' YPos'] >= -0.3]
-
-
-# posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)
-# tmp1 = np.dot(posArray, wwm_extrinsics_matrix.T)
-# test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
-# # normalize z axis
-# test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))
-
-
-# point_size = 1
-# point_color = (0, 0, 255)  # BGR
-# thickness = 4  # 0 、4、8
-# image = cv2.imread("../visualization/testData/image3.jpg")
-# for coor in test:
-#     cv2.circle(image, (int(coor[0]), int(coor[1])), point_size, point_color, thickness)
-#
-# cv2.imwrite('../visualization/testData/6.png', image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])

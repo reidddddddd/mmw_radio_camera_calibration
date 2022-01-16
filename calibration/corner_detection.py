@@ -1,13 +1,13 @@
 import glob
 import numpy as np
 import cv2
-from calibration import util
+from Calibration import util
 
 # termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 
-def find_corners(square_size=0.0275, width=8, height=5):
+def find_corners(model=0, square_size=0.0275, width=8, height=5):
     """ Apply camera calibration operation for images in the given directory path. """
     # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(8,6,0)
     util.info("Finding checkerboard corners...")
@@ -22,7 +22,10 @@ def find_corners(square_size=0.0275, width=8, height=5):
     img_names = []  # Image sizes with names
     img_shapes = []  # Image sizes with names
 
-    images = glob.glob('images/IMG*.jpg')
+    if model == 0:
+        images = glob.glob('images/4k/IMG*.jpg')
+    else:
+        images = glob.glob('../Calibration/images/1080/IMG*.jpg')
     count = 1
     index = 0
     for fname in images:
@@ -47,7 +50,10 @@ def find_corners(square_size=0.0275, width=8, height=5):
             # Draw and display the corners
             img = cv2.drawChessboardCorners(
                 img, (width, height), corners2, ret)
-            cv2.imwrite('images/pattern_' + str(count) + '.png', img)
+            if model ==0:
+                cv2.imwrite('images/4k/pattern_' + str(count) + '.png', img)
+            else:
+                cv2.imwrite('images/1080/pattern_' + str(count) + '.png', img)
             count += 1
         else:
             print("image" + str(index) + "false")
