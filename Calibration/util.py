@@ -285,15 +285,26 @@ def rotationMatrixToEulerAngles(R):
     return np.array([x, y, z])
 
 
-def create_sample_plane(width, height, x, y, z):
-    orgin_point = [x, y, z]
-    width_points_set = []
-    for i in range(1, 10):
-        width_points_set.append([x + ((width / 10) * i), y, z])
+# def create_sample_plane(width, height, x, y, z):
+#     orgin_point = [x, y, z]
+#     width_points_set = []
+#     for i in range(1, 10):
+#         width_points_set.append([x + ((width / 10) * i), y, z])
+#
+#     points_set = []
+#     for point in width_points_set:
+#         for i in range(1, 10):
+#             points_set.append([point[0], point[1] + ((height / 10) * i), point[2]])
+#
+#     return np.array(points_set)
 
-    points_set = []
-    for point in width_points_set:
-        for i in range(1, 10):
-            points_set.append([point[0], point[1] + ((height / 10) * i), point[2]])
+def create_sample_plane(camera_points, square_size=0.0275, width=8, height=5, xOffset=- 0.063, yOffset=-0.174, zOffset=0.2318):
+    objp = np.zeros((height * width, 2), np.float32)
+    objp[:, :2] = np.mgrid[0:width, 0:height].T.reshape(-1, 2)
+    objp = objp * square_size
 
-    return np.array(points_set)
+    objp[:, 0] = objp[:, 0] + xOffset
+    objp[:, 1] = objp[:, 1] + yOffset
+    objp = np.concatenate((objp, np.ones((objp.shape[0], 1), np.float32) * zOffset), axis=1)
+    objp[:, 0] = camera_points[:, 0]
+    return objp
