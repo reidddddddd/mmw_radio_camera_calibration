@@ -61,6 +61,14 @@ def calibration__camera(model):
 
 
 def calibration_mmw_radar_camera(model):
-    intrinsic_matrix, tmp = calibration__camera(model=model)
-    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(np.array([0, -0.1245, 0]))
+    intrinsic_matrix, extrinsics_opt = calibration__camera(model=model)
+    obj_points, img_points, img_shapes, img_names = cd.find_corners(model=1)
+    camera_points = np.dot(util.to_homogeneous_3d_multiple_points(obj_points[8])
+           , extrinsics_opt[8].T)
+    radar_points = util.create_sample_plane(camera_points)
+
+    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(camera_points, radar_points)
     return intrinsic_matrix, wwm_extrinsics_matrix
+
+
+

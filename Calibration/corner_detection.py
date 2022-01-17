@@ -23,9 +23,9 @@ def find_corners(model=0, square_size=0.0275, width=8, height=5):
     img_shapes = []  # Image sizes with names
 
     if model == 0:
-        images = glob.glob('../Visualization/images/4k/IMG*.jpg')
+        images = glob.glob('./images/4k/IMG*.jpg')
     else:
-        images = glob.glob('../Visualization/images/1080/IMG*.jpg')
+        images = glob.glob('./images/1080/IMG*.jpg')
     count = 1
     index = 0
     for fname in images:
