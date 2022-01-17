@@ -11,7 +11,7 @@ def create_homography(image_points, world_points):
     t = util.get_transformation_matrix(image_points, 0)
     t_prime = util.get_transformation_matrix(world_points, 1)
     for i in range(len(image_points)):
-        # In Zhang's calibration method, the world coordinate system is placed on the checkerboard plane,
+        # In Zhang's Calibration method, the world coordinate system is placed on the checkerboard plane,
         # and the checkerboard plane is set to the plane with z = 0.
         # First, convert each points into homogeneous coordinates
         point1 = util.to_homogeneous(image_points[i], 0)

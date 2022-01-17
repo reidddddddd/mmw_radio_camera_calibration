@@ -12,7 +12,7 @@ def main():
     test1 = np.dot(np.dot(util.to_homogeneous_3d_multiple_points(obj_points[0])
                           , extrinsics_opt[0].T), intrinsic_matrix.T)
     test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))
-    v_util.draw_points_on_picture("./images/1080/IMG_001.jpg", test, "./images/1.jpg")
+    v_util.draw_points_on_picture("../Visualization/images/1080/IMG_001.jpg", test, "../Visualization/images/1.jpg")
 
 
 if __name__ == "__main__":

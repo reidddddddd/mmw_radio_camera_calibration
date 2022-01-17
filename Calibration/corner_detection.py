@@ -8,7 +8,7 @@ criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 
 def find_corners(model=0, square_size=0.0275, width=8, height=5):
-    """ Apply camera calibration operation for images in the given directory path. """
+    """ Apply camera Calibration operation for images in the given directory path. """
     # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(8,6,0)
     util.info("Finding checkerboard corners...")
     objp = np.zeros((height * width, 2), np.float32)
@@ -23,9 +23,9 @@ def find_corners(model=0, square_size=0.0275, width=8, height=5):
     img_shapes = []  # Image sizes with names
 
     if model == 0:
-        images = glob.glob('images/4k/IMG*.jpg')
+        images = glob.glob('../Visualization/images/4k/IMG*.jpg')
     else:
-        images = glob.glob('../Calibration/images/1080/IMG*.jpg')
+        images = glob.glob('../Visualization/images/1080/IMG*.jpg')
     count = 1
     index = 0
     for fname in images:
