@@ -1,0 +1,92 @@
+Index: visualization/clean_radar_data.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pandas as pd\r\nimport numpy as np\r\ndef common_read(path):\r\n    frame = pd.read_csv(path)\r\n    frame['originTimestamp'] = frame[' Timestamp']\r\n    frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')\r\n    print(\"all times are shown\" + frame[' Timestamp'].unique())\r\n    frame['union'] = 1\r\n    return frame\r\n\r\ndef get_calibration_result(intrinsic_matrix, wwm_extrinsics_matrix, frame):\r\n    posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)\r\n    tmp1 = np.dot(posArray, wwm_extrinsics_matrix.T)\r\n    test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)\r\n    # normalize z axis\r\n    test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))\r\n    return test
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/visualization/clean_radar_data.py b/visualization/clean_radar_data.py
+--- a/visualization/clean_radar_data.py	(revision 90cb7dca06f03648eed41d916a318ba0ce50af21)
++++ b/visualization/clean_radar_data.py	(date 1642316339986)
+@@ -10,8 +10,11 @@
+ 
+ def get_calibration_result(intrinsic_matrix, wwm_extrinsics_matrix, frame):
+     posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)
+-    tmp1 = np.dot(posArray, wwm_extrinsics_matrix.T)
+     test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
+     # normalize z axis
+     test = np.divide(test1, test1[:, 2].reshape(test1.shape[0], 1))
+-    return test
+\ No newline at end of file
++    return test
++
++
++def inverse_image_point_camera_coor():
++    pass
+\ No newline at end of file
+Index: visualization/test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pandas as pd\r\nimport matplotlib.pyplot as plt\r\nfrom mpl_toolkits.mplot3d import Axes3D\r\n\r\nframe = pd.read_csv(\"./data/pcl2.csv\")\r\nframe['orginTimestamp'] = frame[' Timestamp']\r\ntmp = frame['orginTimestamp'].unique()\r\nframe[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')\r\naa = tmp[2]-tmp[1]\r\n# frame = frame[frame[' ZPos'] >= 0.3]\r\n# frame = frame[frame[' ZPos'] <= 1.0]\r\n# frame = frame[frame[' Xpos'] <= 0.5]\r\n# frame = frame[frame[' Xpos'] >= -0.5]\r\n# frame = frame[frame[' YPos'] <= 0.3]\r\n# frame = frame[frame[' YPos'] >= -0.3]\r\n\r\nprint(frame.count())\r\n\r\nframe = frame[frame[' Timestamp'] <= '2022-01-06 09:48:02']\r\nfig = plt.figure()\r\nax = Axes3D(fig)\r\nax.scatter(frame[' Xpos'], frame[' YPos'], frame[' ZPos'])\r\nax.set_xlabel('X axis')\r\nax.set_ylabel('Y axis')\r\nax.set_zlabel('Z axis')\r\n\r\nplt.show()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/visualization/test.py b/visualization/test.py
+--- a/visualization/test.py	(revision 90cb7dca06f03648eed41d916a318ba0ce50af21)
++++ b/visualization/test.py	(date 1642315865067)
+@@ -1,27 +1,33 @@
+ import pandas as pd
+ import matplotlib.pyplot as plt
+ from mpl_toolkits.mplot3d import Axes3D
+-
+-frame = pd.read_csv("./data/pcl2.csv")
+-frame['orginTimestamp'] = frame[' Timestamp']
+-tmp = frame['orginTimestamp'].unique()
+-frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')
+-aa = tmp[2]-tmp[1]
+-# frame = frame[frame[' ZPos'] >= 0.3]
+-# frame = frame[frame[' ZPos'] <= 1.0]
+-# frame = frame[frame[' Xpos'] <= 0.5]
+-# frame = frame[frame[' Xpos'] >= -0.5]
+-# frame = frame[frame[' YPos'] <= 0.3]
+-# frame = frame[frame[' YPos'] >= -0.3]
++import numpy as np
++a = np.array([[1,2], [3,4]])
++c = a.dot(a.T)
++print(a)
++print(c.dot(np.linalg.inv(a.T)))
+ 
+-print(frame.count())
+ 
+-frame = frame[frame[' Timestamp'] <= '2022-01-06 09:48:02']
+-fig = plt.figure()
+-ax = Axes3D(fig)
+-ax.scatter(frame[' Xpos'], frame[' YPos'], frame[' ZPos'])
+-ax.set_xlabel('X axis')
+-ax.set_ylabel('Y axis')
+-ax.set_zlabel('Z axis')
+-
+-plt.show()
++# frame = pd.read_csv("./data/pcl2.csv")
++# frame['orginTimestamp'] = frame[' Timestamp']
++# tmp = frame['orginTimestamp'].unique()
++# frame[' Timestamp'] = pd.to_datetime(frame[' Timestamp'] / 1000, unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S')
++# aa = tmp[2]-tmp[1]
++# # frame = frame[frame[' ZPos'] >= 0.3]
++# # frame = frame[frame[' ZPos'] <= 1.0]
++# # frame = frame[frame[' Xpos'] <= 0.5]
++# # frame = frame[frame[' Xpos'] >= -0.5]
++# # frame = frame[frame[' YPos'] <= 0.3]
++# # frame = frame[frame[' YPos'] >= -0.3]
++#
++# print(frame.count())
++#
++# frame = frame[frame[' Timestamp'] <= '2022-01-06 09:48:02']
++# fig = plt.figure()
++# ax = Axes3D(fig)
++# ax.scatter(frame[' Xpos'], frame[' YPos'], frame[' ZPos'])
++# ax.set_xlabel('X axis')
++# ax.set_ylabel('Y axis')
++# ax.set_zlabel('Z axis')
++#
++# plt.show()
