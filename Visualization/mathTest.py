@@ -4,7 +4,7 @@ p = np.array([[1,2,3,1],[2,3,3,1], [3,4,4,1], [4,5,4,1], [5,6,5,1],[6,2,3,1],[7,
 u = np.array([[2,4,6,8,10,12,14,16,18,19]])
 v = np.array([[3,4,5,6,7,3,4,5,6,7]])
 w =  np.array([[3,3,4,4,5,3,3,4,4,5]])
-p.
+
 i = np.ones([1,10])
 T1 =(np.linalg.inv(p.T.dot(p)).dot(p.T).dot(u.T)).T
 T2 =(np.linalg.inv(p.T.dot(p)).dot(p.T).dot(v.T)).T
