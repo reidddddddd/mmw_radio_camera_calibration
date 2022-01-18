@@ -16,9 +16,9 @@ https://github.com/reidddddddd/mmw_radio_camera_calibration/tree/main/Calibratio
 ##### 输出例子：
 
 内参矩阵
- ![image](https://github.com/ButBueatiful/dotvim/raw/master/screenshots/vim-screenshot.jpg)
+ ![image](https://github.com/reidddddddd/mmw_radio_camera_calibration/blob/main/document/image/intrinsic_matrix.png)
  外参矩阵
- ![image](https://github.com/ButBueatiful/dotvim/raw/master/screenshots/vim-screenshot.jpg)
+ ![image](https://github.com/reidddddddd/mmw_radio_camera_calibration/blob/main/document/image/intrinsic_matrix.png)
 ## 毫米波雷达标定
 
 ### 方法1 
