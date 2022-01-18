@@ -36,18 +36,18 @@ def compute_extrinsics(A, homography):
     return E
 
 
-def compute_wwm_extrinsics(camera_point, radar_points):
-    radar_points = np.concatenate((radar_points, np.ones((radar_points.shape[0], 1), np.float32)), axis=1)
-    u = camera_point[:, 0].T
-    v = camera_point[:, 1].T
-    w = radar_points[:, 2].T
-    i = np.ones([1,camera_point.shape[0]])
-    T1 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(u.T)).T
-    T2 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(v.T)).T
-    T3 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(w.T)).T
-    T4 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(i.T)).T
-    T = np.vstack((T1, T2, T3, T4))
-    return T
-    # R = np.identity(3)
-    # E = np.hstack((R,t[:, np.newaxis]))
-    # return E
+def compute_wwm_extrinsics(camera_point, radar_points, t):
+    # radar_points = np.concatenate((radar_points, np.ones((radar_points.shape[0], 1), np.float32)), axis=1)
+    # u = camera_point[:, 0].T
+    # v = camera_point[:, 1].T
+    # w = radar_points[:, 2].T
+    # i = np.ones([1,camera_point.shape[0]])
+    # T1 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(u.T)).T
+    # T2 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(v.T)).T
+    # T3 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(w.T)).T
+    # T4 = (np.linalg.inv(radar_points.T.dot(radar_points)).dot(radar_points.T).dot(i.T)).T
+    # T = np.vstack((T1, T2, T3, T4))
+    # return T
+    R = np.identity(3)
+    E = np.hstack((R,t[:, np.newaxis]))
+    return E
