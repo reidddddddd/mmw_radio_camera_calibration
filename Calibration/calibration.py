@@ -67,8 +67,28 @@ def calibration_mmw_radar_camera(model):
            , extrinsics_opt[8].T)
     radar_points = util.create_sample_plane(camera_points)
 
-    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(camera_points, radar_points, t=np.array([0, -0.1245, 0]))
+    wwm_extrinsics_matrix = extr.compute_wwm_extrinsics(camera_points, radar_points, t=np.array([0, -0.3845, -0.01]))
     return intrinsic_matrix, wwm_extrinsics_matrix
+
+
+if __name__ == '__main__':
+    ###
+    # camera intrinsic and extrinsic matrix building
+    # model=1 ===> 1080p
+    # mode=0 =====> 4k
+    ###
+    intrinsic_matrix, extrinsics_opts = calibration__camera(model=1)
+    # corner reader
+    obj_points, img_points, img_shapes, img_names = cd.find_corners(model=1)
+    # PnP algorithm to find 3D camera points
+    camera_points = extr.compute_camera_points(extrinsics_opts, obj_points)
+    # read radar points based on RCS filter
+    radar_points = extr.compute_radar_points(camera_points)
+
+    np.savetxt("camera.csv", np.array(camera_points).T, delimiter=',')
+    np.savetxt("radar.csv", np.array(radar_points).T, delimiter=',')
+
+
 
 
 

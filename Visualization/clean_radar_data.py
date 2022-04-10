@@ -16,7 +16,7 @@ def common_read(csv_dir: str, picture_dir: str):
 
 
 def get_calibration_result(intrinsic_matrix, wwm_extrinsics_matrix, frame):
-    posArray = frame[[' Xpos', ' YPos', ' ZPos']].to_numpy(dtype=float)
+    posArray = frame[[' Xpos', ' YPos', ' ZPos', 'union']].to_numpy(dtype=float)
 
     test1 = np.dot(np.dot(posArray, wwm_extrinsics_matrix.T), intrinsic_matrix.T)
     # normalize z axis

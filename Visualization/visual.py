@@ -3,9 +3,9 @@ from Visualization import clean_radar_data
 from Visualization import util
 import numpy as np
 
-picture_dir = "./outData/3/IMG_001.jpg"
-csv_dir = "./outData/3/pcl/pcl.csv"
-out_dir = "./outData/3/pcl/1.jpg"
+picture_dir = "./outData/8/IMG_001.jpg"
+csv_dir = "./outData/8/pcl/pcl.csv"
+out_dir = "./outData/8/pcl/1.jpg"
 intrinsic_matrix, wwm_extrinsics_matrix = calibration.calibration_mmw_radar_camera(model=1)
 
 

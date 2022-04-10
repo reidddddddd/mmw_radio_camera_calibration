@@ -17,19 +17,17 @@ def compute_extrinsics(A, homography):
     # Compute r1, r2, r3 and t with the values given above.
     r1 = lmbda * np.dot(A_inv, h1)
     r2 = lmbda * np.dot(A_inv, h2)
-    # r3 can be calculated with the orthogonality between r1 and r2.
+    #  r3 can be calculated with the orthogonality between r1 and r2.
     r3 = np.cross(r1, r2)
     t = lmbda * np.dot(A_inv, h3)
 
     # Reconstitute the rotation component of the extrinsics and reorthogonalize.
-    # R = [r1, r2, r3]
+    #  R = [r1, r2, r3]
     R = np.vstack((r1, r2, r3)).T
     R = util.reorthogonalize(R)
 
-
     # Reconstitute full extrinsics
     E = np.hstack((R, t[:, np.newaxis]))
-
 
     util.info("DONE.")
 
@@ -49,5 +47,26 @@ def compute_wwm_extrinsics(camera_point, radar_points, t):
     # T = np.vstack((T1, T2, T3, T4))
     # return T
     R = np.identity(3)
-    E = np.hstack((R,t[:, np.newaxis]))
+    E = np.hstack((R, t[:, np.newaxis]))
     return E
+
+
+def compute_camera_points(extrinsics_matrixs, obj_points):
+    camera_points = list()
+    for idx, e in enumerate(extrinsics_matrixs):
+        camera_point = np.average(np.dot(util.to_homogeneous_3d_multiple_points(obj_points[idx])
+                                         , extrinsics_matrixs[idx].T), axis=0)
+        camera_points.append(camera_point)
+    return camera_points
+
+
+def compute_radar_points(camera_points):
+    # todo temp set camera_radar extrinsic matrix
+    R = np.identity(3)
+    t = np.array([0, 0.3845, 0.01])
+    E = np.hstack((R, t[:, np.newaxis]))
+    radar_points = list()
+    for idx, camera_point in enumerate(camera_points):
+        radar_point = np.dot(np.append(camera_point, 1), E.T)
+        radar_points.append(radar_point)
+    return radar_points
